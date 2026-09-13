@@ -15,6 +15,7 @@
 ```
 project/
 ├── development-log.md
+├── main.py
 └── README.md
 ```
 
@@ -24,7 +25,7 @@ project/
 - 
 
 ## 막혔던 부분과 해결 과정
-### 문제 1: (예: "loss가 안 줄어듦")
+### 문제 1: 
 - 원인:
 - 시도한 것들:
 - 최종 해결:
