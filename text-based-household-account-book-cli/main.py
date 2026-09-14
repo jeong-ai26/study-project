@@ -106,9 +106,26 @@ while True:
                 writer.writerows(reader_list)
 
     elif a == '3' or a == '잔액 조회':
-        pass
+        with open('household-account.csv', 'r', encoding='utf-8') as f:
+            reader = csv.reader(f)
+            recently_total = list(reader)[-1][3]
+            print(f'현재 잔고는 {recently_total}원 입니다.')
     elif a == '4' or a == '내역 조회':
-        pass 
+        line_count = input('최근 몇 개의 내역을 보시겠습니까?(0보다 큰 값을 입력해주세요.): ')
+
+        while True:
+                    if id == 'q':
+                        break
+                    elif not id.isdigit():
+                        id = input("올바른 값을 입력해주세요. 취소를 원한다면 q를 입력해주세요.: ")
+                    elif not int(id) < len(l):
+                        id = input("값이 너무 큽니다. 올바른 값을 입력해주세요. 취소를 원한다면 q를 입력해주세요.: ")
+                    else:
+                        id = int(id)
+                        break
+                if id == 'q': continue
+
+
     elif a == '5' or a == '작업 종료':
         break
     else:
