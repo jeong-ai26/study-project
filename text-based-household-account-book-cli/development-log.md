@@ -61,6 +61,7 @@
 
 ### 오늘 한 일
 - 코드 작성
+- csv 모듈 공부
 
 ### 배운 것 / 새로 안 것
 
@@ -81,6 +82,7 @@
 
 ### 참고자료
 - https://nerogarret.tistory.com/63
+- https://devpouch.tistory.com/55
 
 
 ---

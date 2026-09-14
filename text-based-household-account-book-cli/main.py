@@ -19,13 +19,34 @@ import csv
 while True:
     a = input("-"*50 + "\n원하시는 작업을 선택해주세요.\n1. 항목 추가\n2. 항목 삭제\n3. 잔액 조회\n4. 내역 조회\n5. 작업 종료\n번호 또는 작업을 입력해주세요.: ")
     if a == '1' or a == '항목 추가':
+        # 항목 추가할 때 필요한 매개변수들
+        id = 0
         content = input("항목의 내용을 입력해주세요.: ")
         cost = input("항목의 비용을 입력해주세요.: ")
-        while not cost.isdigit():
-            cost = input("값이 잘못되었습니다. 숫자를 입력해주세요.: ")
-        with open("household-account.csv", "a", newline='') as f:
+        total = 0
+
+        # cost를 정수 타입으로 잘 받기 위한 코드
+        b = True
+        while b:
+            try:
+                cost = int(cost)
+                b = False
+            except ValueError:
+                cost = input("항목의 비용을 입력해주세요.: ")
+
+        # id와 total을 얻기 위한 코드
+        with open("household-account.csv", "r", encoding="utf-8") as f:
+            reader = csv.reader(f)
+            l = list(reader)[-1]
+            id = int(l[0]) # 단순히 마지막 줄을 보고 싶을 뿐인데 모든 값을 리스트로 만드는게 맞나?
+            total = int(l[3])
+
+        # 모든 매개변수들을 csv의 마지막 줄에 추가하는 코드
+        with open("household-account.csv", "a", newline='', encoding='utf-8') as f:
             writer = csv.writer(f)
-            
+            writer.writerow([id+1, content, cost, total+cost])
+
+        print("항목이 작성 되었습니다.")
     elif a == '2' or a == '항목 삭제':
         pass
     elif a == '3' or a == '잔액 조회':
