@@ -86,15 +86,20 @@ while True:
         if yes_or_no == 'n': continue
         # 답변이 y면 id행을 지우는 코드
         else:
+            # id 행을 지우는 코드
             with open('household-account.csv', 'r', encoding='utf-8') as f:
                 reader = csv.reader(f)
                 reader_list = list(reader)[1:]
             for x in reader_list:
                 if int(x[0]) == id:
                     reader_list.remove(x)
+
+            # id 행보다 큰 행들의 id를 1씩 빼는 코드
             if id != len(reader_list):
                 for x in reader_list[id:]:
                     x[0] = int(x[0])-1
+
+            # 삭제한 리스트로 csv에 다시 쓰는 코드
             with open('household-account.csv', 'w', encoding='utf-8', newline='') as f:
                 writer = csv.writer(f)
                 writer.writerow(fieldnames)
