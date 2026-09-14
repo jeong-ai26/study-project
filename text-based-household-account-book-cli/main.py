@@ -13,11 +13,19 @@
 ### 조건
 - 항목은 파일에 저장하고 불러와야함(csv)
 '''
+import csv
+
 
 while True:
     a = input("-"*50 + "\n원하시는 작업을 선택해주세요.\n1. 항목 추가\n2. 항목 삭제\n3. 잔액 조회\n4. 내역 조회\n5. 작업 종료\n번호 또는 작업을 입력해주세요.: ")
     if a == '1' or a == '항목 추가':
-        input("항목의 내용을 입력해주세요: ")
+        content = input("항목의 내용을 입력해주세요.: ")
+        cost = input("항목의 비용을 입력해주세요.: ")
+        while not cost.isdigit():
+            cost = input("값이 잘못되었습니다. 숫자를 입력해주세요.: ")
+        with open("household-account.csv", "a", newline='') as f:
+            writer = csv.writer(f)
+            
     elif a == '2' or a == '항목 삭제':
         pass
     elif a == '3' or a == '잔액 조회':
