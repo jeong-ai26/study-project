@@ -110,23 +110,56 @@ while True:
             reader = csv.reader(f)
             recently_total = list(reader)[-1][3]
             print(f'현재 잔고는 {recently_total}원 입니다.')
+
+        # 현재 잔고 볼 시간을 만드는 코드
+        is_yes = input('메뉴창으로 돌아가시겠습니까? y를 입력해주세요.: ')
+        
+        while True:
+            if is_yes == 'y':
+                break
+            else:
+                is_yes = input('잘못된 값이 입력되었습니다. y를 입력해주세요.: ')
+
     elif a == '4' or a == '내역 조회':
-        line_count = input('최근 몇 개의 내역을 보시겠습니까?(0보다 큰 값을 입력해주세요.): ')
+        line_count = input('최근 몇 개의 내역을 보시겠습니까? 0보다 큰 값을 입력해주세요. 취소를 원한다면 q를 입력해주세요.: ')
+
+        # line_count를 0보다 큰 정수를 받는 코드
+        with open('household-account.csv', 'r', encoding='utf-8') as f:
+            reader = csv.reader(f)
+            l = list(reader)[1:]
 
         while True:
-                    if id == 'q':
-                        break
-                    elif not id.isdigit():
-                        id = input("올바른 값을 입력해주세요. 취소를 원한다면 q를 입력해주세요.: ")
-                    elif not int(id) < len(l):
-                        id = input("값이 너무 큽니다. 올바른 값을 입력해주세요. 취소를 원한다면 q를 입력해주세요.: ")
-                    else:
-                        id = int(id)
-                        break
-                if id == 'q': continue
+            if line_count == 'q':
+               break
+            elif not line_count.isdigit():
+                line_count = input("올바른 값을 입력해주세요. 취소를 원한다면 q를 입력해주세요.: ")
+            elif not int(line_count) < len(l):
+                line_count = input("값이 너무 큽니다. 올바른 값을 입력해주세요. 취소를 원한다면 q를 입력해주세요.: ")
+            elif line_count == '0':
+                line_count = input("0보다 큰 값을 입력해주세요. 취소를 원한다면 q를 입력해주세요.: ")
+            else:
+                line_count = int(line_count)
+                break
+        if line_count == 'q': continue
 
+        # line_count개의 항목을 인출하는 코드
+        with open('household-account.csv', 'r', encoding='utf-8') as f:
+            reader = list(csv.DictReader(f))
+            for x in reader[-line_count:]:
+                s = str(x).strip(r'{}')
+                print(s)
+
+        # 내역 아래 바로 메뉴가 떠서 내역이 가려져서 한 번 선택지를 둬서 볼 시간을 두는 코드
+        is_yes = input('메뉴창으로 돌아가시겠습니까? y를 입력해주세요.: ')
+
+        while True:
+            if is_yes == 'y':
+                break
+            else:
+                is_yes = input('잘못된 값이 입력되었습니다. y를 입력해주세요.: ')
 
     elif a == '5' or a == '작업 종료':
+        print('감사합니다. 다음에 또 이용해주세요.')
         break
     else:
-        print("올바른 값을 입력해주세요.")
+        print("!!!올바른 값을 입력해주세요.!!!")
