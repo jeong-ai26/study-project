@@ -43,9 +43,9 @@ while True:
         # id와 total을 csv에서 얻는 코드
         with open("household-account.csv", "r", encoding="utf-8") as f:
             reader = csv.reader(f)
-            l = list(reader)[-1]
-            id = int(l[0]) # 단순히 마지막 줄을 보고 싶을 뿐인데 모든 값을 리스트로 만드는게 맞나?
-            total = int(l[3])
+            reader_list_original = list(reader)[-1]
+            id = int(reader_list_original[0]) # 단순히 마지막 줄을 보고 싶을 뿐인데 모든 값을 리스트로 만드는게 맞나?
+            total = int(reader_list_original[3])
 
         # 모든 매개변수들을 가계부에 추가하는 코드
         with open("household-account.csv", "a", newline='', encoding='utf-8') as f:
@@ -61,14 +61,14 @@ while True:
         # 'id를 양의 정수 타입으로 받기'+'가계부의 길이 보다 긴 id를 받았을 때 처리하기' 위한 코드
         with open('household-account.csv', 'r', encoding='utf-8') as f:
                     reader = csv.reader(f)
-                    l = list(reader)[1:]
+                    reader_list_original = list(reader)[1:]
         
         while True:
             if id == 'q':
                 break
             elif not id.isdigit():
                 id = input("-"*50 + "\n올바른 값을 입력해주세요. 취소를 원한다면 q를 입력해주세요.: ")
-            elif not int(id) < len(l):
+            elif not int(id) < len(reader_list_original):
                 id = input("-"*50 + "\n값이 너무 큽니다. 올바른 값을 입력해주세요. 취소를 원한다면 q를 입력해주세요.: ")
             else:
                 id = int(id)
@@ -76,9 +76,7 @@ while True:
         if id == 'q': continue
 
         # 삭제하려는게 정말 id가 맞는지 항목을 보여주면서 재검토
-        with open('household-account.csv', 'r', encoding='utf-8') as f:
-            reader = csv.DictReader(f)
-            yes_or_no = input(f'삭제하시려는 항목이 {list(reader)[id]}이 맞습니까? y 또는 n을 입력해주세요.: ')
+        yes_or_no = input(f'삭제하시려는 항목이 "{', '.join(f'{x}: {y}' for x, y in zip(fieldnames, reader_list_original[id]))}"이 맞습니까? y 또는 n을 입력해주세요.: ')
         while True:
             if not yes_or_no == 'y' and not yes_or_no == 'n':
                 yes_or_no = input("-"*50 + '\n올바른 값을 입력해주세요. y 또는 n을 입력해주세요.: ')
@@ -90,14 +88,12 @@ while True:
         # 답변이 y면 id행을 지우는 코드
         else:
             # id 행을 지우는 코드
-            with open('household-account.csv', 'r', encoding='utf-8') as f:
-                reader = csv.reader(f)
-                reader_list = reader_list = [x for x in list(reader)[1:] if int(x[0]) != id]
+            reader_list = [x for x in reader_list_original if int(x[0]) != id]
 
             # id 행보다 큰 행들의 id를 1씩 빼는 코드
-            if id != len(reader_list):
-                for x in reader_list[id:]:
-                    x[0] = int(x[0])-1
+            for x in reader_list[id:]:
+                x[0] = int(x[0]) - 1
+                x[3] = int(x[3]) - int(reader_list_original[id][2])
 
             # 삭제한 리스트로 csv에 다시 쓰는 코드
             with open('household-account.csv', 'w', encoding='utf-8', newline='') as f:
@@ -126,16 +122,16 @@ while True:
         # line_count를 0보다 큰 정수를 받는 코드
         with open('household-account.csv', 'r', encoding='utf-8') as f:
             reader = csv.reader(f)
-            l = list(reader)[1:]
+            reader_list_original = list(reader)[1:]
 
         while True:
             if line_count == 'q':
                break
             elif not line_count.isdigit():
                 line_count = input("올바른 값을 입력해주세요. 취소를 원한다면 q를 입력해주세요.: ")
-            elif not int(line_count) < len(l):
+            elif not int(line_count) < len(reader_list_original):
                 print('입력 값이 내역의 길이보다 커서 내역 전체를 출력합니다.')
-                line_count = len(l)
+                line_count = len(reader_list_original)
             elif line_count == '0':
                 line_count = input("0보다 큰 값을 입력해주세요. 취소를 원한다면 q를 입력해주세요.: ")
             else:

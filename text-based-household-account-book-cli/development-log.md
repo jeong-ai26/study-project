@@ -157,6 +157,7 @@
 - 코드 리뷰 중 '삭제' 기능에서 최신화에 total은 반영안한걸 발견 -> 코드 작성
 - 코드 리뷰 중 '추가' 기능에서 '--5' 같은 '-' 기호를 여러개 쓰면 오류나는걸 발견 -> 코드 작성
 - 코드 리뷰 중 가계부가 텅 비면 대부분의 기능이 오류나는걸 발견 -> 코드 작성
+- 코드 리뷰 중 '삭제' 중에서 필요 이상으로 4번 파일을 여는 것을 발견 -> 코드 작성
 
 ### 배운 것 / 새로 안 것
 - 중간에 있는 항목을 삭제할 때 remove()로 삭제하는 것 보단 리스트 컴프리헨션으로 새로 만드는게 좋다. 인덱스를 건너뛰는 버그가 생기기 쉬움.
@@ -176,6 +177,28 @@
       reader_list = [x for x in list(reader)[1:] if x[0] != id]
   ```
 
+- '삭제' 코드에서 필요 이상으로 4번이나 파일을 열었는데 처음 한 번 열었을 때 메모리에 저장해두고 재사용하는게 좋다.
+  아래 코드 처럼 한 번 변수에 담고 그걸 계속 재사용하기.
+  ```python
+  with open('household-account.csv', 'r', encoding='utf-8') as f:
+                    reader = csv.reader(f)
+                    reader_list_original = list(reader)[1:]
+  ```
+
+- 리스트 슬라이싱 할 때 시작 인덱스를 리스트 길이보다 크게해도 오류가 나는게 아니라 빈리스트가 출력되서 굳이 예외처리 안해도 된다.
+  내가 쓴 코드(굳이 안해도 되는 예):
+  ```python
+  if id != len(reader_list):
+      if id != len(reader_list):
+          for x in reader_list[id:]:
+              x[0] = int(x[0])-1
+  ```
+  권장 코드:
+  ```python
+  if id != len(reader_list):
+      for x in reader_list[id:]:
+          x[0] = int(x[0])-1
+  ```
 
 ### 막힌 것 / 헷갈렸던 것
 - 문제 상황:
