@@ -51,11 +51,11 @@ if __name__ == "__main__":
             while True:
                 if cost == 'q':
                     break
-                elif not cost.replace('-', '', 1).isdigit():
-                    cost = input("-"*50 + "\n잘못된 값이 입력되었습니다. 항목의 비용을 입력해주세요.: ")
-                else:
+                try:
                     cost = int(cost)
                     break
+                except ValueError:
+                    cost = input("-"*50 + "\n잘못된 값이 입력되었습니다. 항목의 비용을 입력해주세요.: ")
             if cost == 'q': continue
             
             # idx와 total을 csv에서 얻는 코드
@@ -68,7 +68,7 @@ if __name__ == "__main__":
                 total = 0
 
             # 모든 매개변수들을 가계부에 추가하는 코드
-            with open(CSV_PATH, "choice", newline='', encoding='utf-8') as f:
+            with open(CSV_PATH, "a", newline='', encoding='utf-8') as f:
                 writer = csv.writer(f)
                 writer.writerow([idx+1, content, cost, total+cost])
 
@@ -93,13 +93,14 @@ if __name__ == "__main__":
             while True:
                 if idx == 'q':
                     break
-                elif not idx.isdigit():
-                    idx = input("-"*50 + "\n올바른 값을 입력해주세요. 취소를 원한다면 q를 입력해주세요.: ")
-                elif not int(idx) < len(reader_list_original):
-                    idx = input("-"*50 + "\n값이 너무 큽니다. 올바른 값을 입력해주세요. 취소를 원한다면 q를 입력해주세요.: ")
-                else:
+                try:
                     idx = int(idx)
+                    if idx < 0:
+                        idx = input("-"*50 + "\n0보다 크거나 같은 값을 입력해주세요. 취소를 원한다면 q를 입력해주세요.: ")
+                        continue
                     break
+                except ValueError:
+                    idx = input("-"*50 + "\n올바른 값을 입력해주세요. 취소를 원한다면 q를 입력해주세요.: ")
             if idx == 'q': continue
 
             # 삭제하려는게 정말 id가 맞는지 항목을 보여주면서 재검토
@@ -176,6 +177,7 @@ if __name__ == "__main__":
                 elif not int(line_count) < len(reader_list_original):
                     print('입력 값이 내역의 길이보다 커서 내역 전체를 출력합니다.')
                     line_count = len(reader_list_original)
+                    break
                 elif line_count == '0':
                     line_count = input("0보다 큰 값을 입력해주세요. 취소를 원한다면 q를 입력해주세요.: ")
                 else:
@@ -184,7 +186,7 @@ if __name__ == "__main__":
             if line_count == 'q': continue
 
             # line_count개의 항목을 인출하는 코드
-            for i in reader_list_original:
+            for i in reader_list_original[-line_count:]:
                 print(', '.join(f'{x}: {y}' for x, y in zip(fieldnames, i)))
 
             # 내역 아래 바로 메뉴가 떠서 내역이 가려져서 한 번 선택지를 둬서 볼 시간을 두는 코드
