@@ -149,3 +149,48 @@
 
 
 ---
+
+## 2026-09-15
+
+### 오늘 한 일
+- Claude한테 코드 리뷰 받기
+- 코드 리뷰 중 '삭제' 기능에서 최신화에 total은 반영안한걸 발견 -> 코드 작성
+- 코드 리뷰 중 '추가' 기능에서 '--5' 같은 '-' 기호를 여러개 쓰면 오류나는걸 발견 -> 코드 작성
+- 코드 리뷰 중 가계부가 텅 비면 대부분의 기능이 오류나는걸 발견 -> 코드 작성
+
+### 배운 것 / 새로 안 것
+- 중간에 있는 항목을 삭제할 때 remove()로 삭제하는 것 보단 리스트 컴프리헨션으로 새로 만드는게 좋다. 인덱스를 건너뛰는 버그가 생기기 쉬움.
+  내가 짠 코드:
+  ```python
+  with open('household-account.csv', 'r', encoding='utf-8') as f:
+      reader = csv.reader(f)
+      reader_list = list(reader)[1:]
+  for x in reader_list:
+      if int(x[0]) == id:
+          reader_list.remove(x)
+  ```
+  권장 코드:
+  ```python
+  with open('household-account.csv', 'r', encoding='utf-8') as f:
+      reader = csv.reader(f)
+      reader_list = [x for x in list(reader)[1:] if x[0] != id]
+  ```
+
+
+### 막힌 것 / 헷갈렸던 것
+- 문제 상황:
+- 시도해본 것:
+- 아직 해결 안 됐으면 → 다음에 시도할 것 적어두기
+
+### 오늘의 코드/실험 스니펫
+
+
+### 느낀 점 / 메모
+
+
+### 다음에 할 일
+
+
+### 참고자료
+
+---

@@ -92,10 +92,7 @@ while True:
             # id 행을 지우는 코드
             with open('household-account.csv', 'r', encoding='utf-8') as f:
                 reader = csv.reader(f)
-                reader_list = list(reader)[1:]
-            for x in reader_list:
-                if int(x[0]) == id:
-                    reader_list.remove(x)
+                reader_list = reader_list = [x for x in list(reader)[1:] if int(x[0]) != id]
 
             # id 행보다 큰 행들의 id를 1씩 빼는 코드
             if id != len(reader_list):
