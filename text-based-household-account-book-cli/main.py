@@ -13,14 +13,14 @@
 - 항목은 파일에 저장하고 불러와야함(csv)
 '''
 import csv
-fieldnames = ['id', 'content', 'cost', 'total'] # csv파일 열 이름
+fieldnames = ['idx', 'content', 'cost', 'total'] # csv파일 열 이름
 
 # 메뉴창
 while True:
     a = input("-"*50 + "\n원하시는 작업을 선택해주세요.\n1. 항목 추가\n2. 항목 삭제\n3. 잔액 조회\n4. 내역 조회\n5. 작업 종료\n번호 또는 작업을 입력해주세요.: ")
     if a == '1' or a == '항목 추가':
         # 혹시 몰라서 넣은 매개변수 초기화
-        id = 0
+        idx = 0
         total = 0
 
         # content와 cost를 입력받는 코드
@@ -28,12 +28,11 @@ while True:
         if content == 'q': continue
         cost = input("-"*50 + "\n항목의 비용을 입력해주세요. 취소를 원한다면 q를 입력해주세요.: ")
         
-
         # cost를 정수 타입으로 잘 받기 위한 코드
         while True:
             if cost == 'q':
                 break
-            elif not cost.lstrip('-').isdigit():
+            elif not cost.replace('-', '', 1).isdigit():
                 cost = input("-"*50 + "\n잘못된 값이 입력되었습니다. 항목의 비용을 입력해주세요.: ")
             else:
                 cost = int(cost)
@@ -43,19 +42,19 @@ while True:
         # id와 total을 csv에서 얻는 코드
         with open("household-account.csv", "r", encoding="utf-8") as f:
             reader = csv.reader(f)
-            reader_list_original = list(reader)[-1]
-            id = int(reader_list_original[0]) # 단순히 마지막 줄을 보고 싶을 뿐인데 모든 값을 리스트로 만드는게 맞나?
-            total = int(reader_list_original[3])
+            reader_lastitem = list(reader)[-1]
+            idx = int(reader_lastitem[0]) # 단순히 마지막 줄을 보고 싶을 뿐인데 모든 값을 리스트로 만드는게 맞나?
+            total = int(reader_lastitem[3])
 
         # 모든 매개변수들을 가계부에 추가하는 코드
         with open("household-account.csv", "a", newline='', encoding='utf-8') as f:
             writer = csv.writer(f)
-            writer.writerow([id+1, content, cost, total+cost])
+            writer.writerow([idx+1, content, cost, total+cost])
 
         print("-"*50 + "\n항목이 작성 되었습니다.")
     elif a == '2' or a == '항목 삭제':
         # 삭제할 id를 받는 코드
-        id = input("-"*50 + "\n삭제할 항목의 id를 적어주세요. 취소를 원한다면 q를 입력해주세요.: ")
+        idx = input("-"*50 + "\n삭제할 항목의 id를 적어주세요. 취소를 원한다면 q를 입력해주세요.: ")
 
         
         # 'id를 양의 정수 타입으로 받기'+'가계부의 길이 보다 긴 id를 받았을 때 처리하기' 위한 코드
@@ -64,19 +63,19 @@ while True:
                     reader_list_original = list(reader)[1:]
         
         while True:
-            if id == 'q':
+            if idx == 'q':
                 break
-            elif not id.isdigit():
-                id = input("-"*50 + "\n올바른 값을 입력해주세요. 취소를 원한다면 q를 입력해주세요.: ")
-            elif not int(id) < len(reader_list_original):
-                id = input("-"*50 + "\n값이 너무 큽니다. 올바른 값을 입력해주세요. 취소를 원한다면 q를 입력해주세요.: ")
+            elif not idx.isdigit():
+                idx = input("-"*50 + "\n올바른 값을 입력해주세요. 취소를 원한다면 q를 입력해주세요.: ")
+            elif not int(idx) < len(reader_list_original):
+                idx = input("-"*50 + "\n값이 너무 큽니다. 올바른 값을 입력해주세요. 취소를 원한다면 q를 입력해주세요.: ")
             else:
-                id = int(id)
+                idx = int(idx)
                 break
-        if id == 'q': continue
+        if idx == 'q': continue
 
         # 삭제하려는게 정말 id가 맞는지 항목을 보여주면서 재검토
-        yes_or_no = input(f'삭제하시려는 항목이 "{', '.join(f'{x}: {y}' for x, y in zip(fieldnames, reader_list_original[id]))}"이 맞습니까? y 또는 n을 입력해주세요.: ')
+        yes_or_no = input(f'삭제하시려는 항목이 "{', '.join(f'{x}: {y}' for x, y in zip(fieldnames, reader_list_original[idx]))}"이 맞습니까? y 또는 n을 입력해주세요.: ')
         while True:
             if not yes_or_no == 'y' and not yes_or_no == 'n':
                 yes_or_no = input("-"*50 + '\n올바른 값을 입력해주세요. y 또는 n을 입력해주세요.: ')
@@ -87,13 +86,13 @@ while True:
         if yes_or_no == 'n': continue
         # 답변이 y면 id행을 지우는 코드
         else:
-            # id 행을 지우는 코드
-            reader_list = [x for x in reader_list_original if int(x[0]) != id]
+            # idx 행을 지우는 코드
+            reader_list = [x for x in reader_list_original if int(x[0]) != idx]
 
-            # id 행보다 큰 행들의 id를 1씩 빼는 코드
-            for x in reader_list[id:]:
+            # idx 행보다 큰 행들의 id를 1씩 빼는 코드
+            for x in reader_list[idx:]:
                 x[0] = int(x[0]) - 1
-                x[3] = int(x[3]) - int(reader_list_original[id][2])
+                x[3] = int(x[3]) - int(reader_list_original[idx][2])
 
             # 삭제한 리스트로 csv에 다시 쓰는 코드
             with open('household-account.csv', 'w', encoding='utf-8', newline='') as f:
