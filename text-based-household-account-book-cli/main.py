@@ -98,6 +98,9 @@ if __name__ == "__main__":
                     if idx < 0:
                         idx = input("-"*50 + "\n0보다 크거나 같은 값을 입력해주세요. 취소를 원한다면 q를 입력해주세요.: ")
                         continue
+                    elif idx >= len(reader_list_original):
+                        idx = input("-"*50 + f"\n값이 너무 큽니다. {len(reader_list_original)} 보다 작은 수를 입력해주세요. 취소를 원한다면 q를 입력해주세요.: ")
+                        continue                        
                     break
                 except ValueError:
                     idx = input("-"*50 + "\n올바른 값을 입력해주세요. 취소를 원한다면 q를 입력해주세요.: ")
